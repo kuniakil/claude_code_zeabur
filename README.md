@@ -2,6 +2,8 @@
 
 A Docker image for deploying Claude Code CLI on Zeabur with SSH access.
 
+<!-- force rebuild -->
+
 ## Features
 
 - **Node.js 20 on Debian Bookworm** base
@@ -11,6 +13,9 @@ A Docker image for deploying Claude Code CLI on Zeabur with SSH access.
 - **Development tools**: git, build-essential, jq, vim, nano, bash
 - **Root user** for SSH sessions
 - **Named volume** at `/data` for persistent data
+- **Homebrew** pre-installed to `/data/linuxbrew` for persistent package management
+- **npm global packages** pre-installed to `/data/npm-global` for persistent npm packages
+- **Bun** pre-installed to `/data/bun` for persistent Bun runtime
 - **MiniMax API** support (international endpoint)
 
 ## Ports
@@ -80,6 +85,53 @@ claude
 | `ANTHROPIC_MODEL` | Yes | `MiniMax-M2.7` |
 | `API_TIMEOUT_MS` | No | API timeout (default: 300000) |
 | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` | No | Set to `1` to reduce traffic |
+
+## Using Homebrew
+
+Homebrew is installed to `/data/linuxbrew` so packages persist across container restarts.
+
+```bash
+# Install a package
+brew install wget
+
+# List installed packages
+brew list
+
+# Update packages
+brew update
+```
+
+Packages installed via Homebrew will be available in SSH sessions and persist across redeployments.
+
+## Using npm Global Packages
+
+npm global packages are installed to `/data/npm-global` so they persist across container restarts.
+
+```bash
+# Install a global npm package
+npm install -g happy
+
+# List global npm packages
+npm list -g
+
+# Update packages
+npm update -g
+```
+
+## Using Bun
+
+Bun is installed to `/data/bun` so it persists across container restarts.
+
+```bash
+# Check Bun version
+bun --version
+
+# Run a script
+bun run script.ts
+
+# Install dependencies
+bun install
+```
 
 ## Quick Start
 
