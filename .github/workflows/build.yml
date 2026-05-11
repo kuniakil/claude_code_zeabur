@@ -32,14 +32,23 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate date-based tag
+        id: tag
+        run: |
+          DATE=$(date +%Y.%-m.%-d)
+          TAG="${DATE}"
+          if [ "${{ github.run_number }}" -gt 1 ]; then
+            TAG="${DATE}-$(( ${{ github.run_number }} - 1 ))"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=sha,prefix=
-            type=ref,event=tag
+            type=raw,value=${{ steps.tag.outputs.tag }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
