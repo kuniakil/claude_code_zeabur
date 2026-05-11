@@ -14,7 +14,7 @@ if ! id brewuser &>/dev/null; then
     useradd -m -s /bin/bash brewuser
 fi
 
-# Persist Claude Code data to named volume
+# Persist directories
 mkdir -p /data/.claude
 mkdir -p /data/npm-global
 mkdir -p /data/linuxbrew/Cellar
@@ -23,13 +23,11 @@ mkdir -p /data/linuxbrew/cache
 mkdir -p /data/.bun
 export CLAUDE_DATA_DIR=/data/.claude
 
-# Set ownership and permissions for brew
-chown -R brewuser:brewuser /root/.linuxbrew 2>/dev/null || true
+# Copy linuxbrew to persistent location on first run (only copy if not already done)
+if [ ! -f /data/linuxbrew/homebrew/bin/brew ] && [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
+    cp -r /home/brewuser/.linuxbrew /data/linuxbrew/homebrew/
+fi
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
-chmod -R a+rx /root/.linuxbrew 2>/dev/null || true
-chmod -R a+rx /data/linuxbrew 2>/dev/null || true
-chmod 755 /root/.linuxbrew /data/linuxbrew 2>/dev/null || true
-chmod 755 /root/.linuxbrew/bin/brew 2>/dev/null || true
 
 # Create wrapper for brew command (runs as brewuser)
 rm -f /usr/local/bin/brew 2>/dev/null || true
@@ -39,14 +37,8 @@ exec su - brewuser -c "export HOMEBREW_PREFIX=/data/linuxbrew/homebrew && export
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
 
-# Copy linuxbrew to persistent location on first run
-if [ ! -f /data/linuxbrew/homebrew/bin/brew ]; then
-    cp -r /root/.linuxbrew /data/linuxbrew/homebrew/
-fi
-chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
-
 # Copy Bun from image to /data/.bun if not already there (first run)
-if [ -d /root/.bun ] && [ ! -L /data/.bun ] && [ ! -f /data/.bun/bun ]; then
+if [ -d /root/.bun ] && [ ! -f /data/.bun/bun ]; then
     cp -r /root/.bun/* /data/.bun/ 2>/dev/null || true
 fi
 
@@ -69,15 +61,15 @@ if [ -f /data/.env ]; then
     set +a
 fi
 
-# Set Homebrew environment - use /data for user-installed packages (persistent)
-export HOMEBREW_PREFIX="/root/.linuxbrew"
+# Set Homebrew environment
+export HOMEBREW_PREFIX="/data/linuxbrew/homebrew"
 export HOMEBREW_CACHE="/data/linuxbrew/cache"
 export HOMEBREW_HOME="/data/linuxbrew"
 export HOMEBREW_CELLAR="/data/linuxbrew/Cellar"
 export HOMEBREW_LOCAL="/data/linuxbrew/homebrew"
 export BUN_INSTALL="/data/.bun"
-export PATH="/usr/local/bin:/data/.bun/bin:/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/data/npm-global/bin:/root/.local/bin:$PATH"
-[ -f /root/.linuxbrew/bin/brew ] && eval "$(/root/.linuxbrew/bin/brew shellenv)"
+export PATH="/usr/local/bin:/data/.bun/bin:/data/linuxbrew/homebrew/bin:/data/linuxbrew/homebrew/sbin:/data/npm-global/bin:/root/.local/bin:$PATH"
+[ -f /data/linuxbrew/homebrew/bin/brew ] && eval "$(/data/linuxbrew/homebrew/bin/brew shellenv)"
 
 # Set npm global packages path
 export npm_config_prefix="/data/npm-global"
