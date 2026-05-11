@@ -35,7 +35,14 @@ chmod 755 /root/.linuxbrew/bin/brew 2>/dev/null || true
 rm -f /usr/local/bin/brew 2>/dev/null || true
 cat > /usr/local/bin/brew << 'BREW_WRAPPER'
 #!/bin/bash
-exec su - brewuser -c "HOMEBREW_PREFIX=/root/.linuxbrew HOMEBREW_CACHE=/data/linuxbrew/cache HOMEBREW_CELLAR=/data/linuxbrew/Cellar HOMEBREW_LOCAL=/data/linuxbrew/homebrew /root/.linuxbrew/bin/brew $@"
+cd /root
+export HOME=/home/brewuser
+export HOMEBREW_PREFIX=/root/.linuxbrew
+export HOMEBREW_CACHE=/data/linuxbrew/cache
+export HOMEBREW_CELLAR=/data/linuxbrew/Cellar
+export HOMEBREW_LOCAL=/data/linuxbrew/homebrew
+export PATH=/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/usr/local/bin:/usr/bin:/bin
+exec su - brewuser -c "cd /root && export HOME=/home/brewuser && export HOMEBREW_PREFIX=/root/.linuxbrew && export HOMEBREW_CACHE=/data/linuxbrew/cache && export HOMEBREW_CELLAR=/data/linuxbrew/Cellar && export HOMEBREW_LOCAL=/data/linuxbrew/homebrew && export PATH=/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/usr/local/bin:/usr/bin:/bin && /root/.linuxbrew/bin/brew $@"
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
 
