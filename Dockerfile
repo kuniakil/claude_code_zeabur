@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Claude Code via official installer
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
+# Create Docker marker file so Homebrew knows it's in a container
+RUN touch /.dockerenv
+
 # Install Homebrew (Linuxbrew) - create non-root user for brew commands
 RUN mkdir -p /root/.linuxbrew && \
     curl -fsSL https://github.com/Homebrew/brew/archive/refs/tags/4.4.0.tar.gz > /tmp/brew.tar.gz && \
