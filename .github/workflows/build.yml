@@ -7,6 +7,10 @@ on:
         description: 'Target platforms (comma-separated)'
         required: true
         default: 'linux/amd64,linux/arm64'
+      tag_suffix:
+        description: 'Tag suffix (e.g. -1, -beta)'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -37,8 +41,8 @@ jobs:
         run: |
           DATE=$(date +%Y.%-m.%-d)
           TAG="${DATE}"
-          if [ "${{ github.run_number }}" -gt 1 ]; then
-            TAG="${DATE}-$(( ${{ github.run_number }} - 1 ))"
+          if [ -n "${{ inputs.tag_suffix }}" ]; then
+            TAG="${DATE}${{ inputs.tag_suffix }}"
           fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
