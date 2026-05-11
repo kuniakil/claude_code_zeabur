@@ -32,8 +32,7 @@ RUN mkdir -p /root/.linuxbrew && \
     mkdir -p /root/.linuxbrew/bin /root/.linuxbrew/sbin /root/.linuxbrew/cache && \
     useradd -m -s /bin/bash brewuser && \
     chown -R brewuser:brewuser /root/.linuxbrew && \
-    touch /root/.linuxbrew/.git/HEAD && \
-    git config --global --file /root/.linuxbrew/.gitconfig core.comment "" || true
+    cd /root/.linuxbrew && git init && git config user.email "brew@localhost" && git config user.name "brew"
 
 ENV HOMEBREW_PREFIX=/root/.linuxbrew
 ENV HOMEBREW_CACHE=/data/linuxbrew/cache
