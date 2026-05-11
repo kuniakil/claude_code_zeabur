@@ -35,7 +35,7 @@ chmod 755 /root/.linuxbrew/bin/brew 2>/dev/null || true
 rm -f /usr/local/bin/brew 2>/dev/null || true
 cat > /usr/local/bin/brew << 'BREW_WRAPPER'
 #!/bin/bash
-exec su - brewuser -c "export HOMEBREW_PREFIX=/root/.linuxbrew && export HOMEBREW_CACHE=/data/linuxbrew/cache && export HOMEBREW_CELLAR=/data/linuxbrew/Cellar && export HOMEBREW_LOCAL=/data/linuxbrew/homebrew && cd /root && /root/.linuxbrew/bin/brew $@"
+exec su - brewuser -c "export HOMEBREW_PREFIX=/data/linuxbrew/homebrew && export HOMEBREW_CACHE=/data/linuxbrew/cache && export HOMEBREW_CELLAR=/data/linuxbrew/Cellar && export HOMEBREW_LOCAL=/data/linuxbrew/homebrew && cd /data/linuxbrew/homebrew && /data/linuxbrew/homebrew/bin/brew $@"
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
 
@@ -43,9 +43,6 @@ chmod 755 /usr/local/bin/brew
 if [ ! -f /data/linuxbrew/homebrew/bin/brew ]; then
     cp -r /root/.linuxbrew /data/linuxbrew/homebrew/
 fi
-# Symlink back to /root/.linuxbrew for the wrapper to work
-rm -rf /root/.linuxbrew 2>/dev/null || true
-ln -s /data/linuxbrew/homebrew /root/.linuxbrew
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
 
 # Copy Bun from image to /data/.bun if not already there (first run)
