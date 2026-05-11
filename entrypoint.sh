@@ -23,9 +23,12 @@ mkdir -p /data/linuxbrew/cache
 mkdir -p /data/.bun
 export CLAUDE_DATA_DIR=/data/.claude
 
-# Set ownership for persistent directories
+# Set ownership and permissions for brew
+chown -R brewuser:brewuser /root/.linuxbrew 2>/dev/null || true
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
-chmod -R a+rx /root/.linuxbrew/bin/brew 2>/dev/null || true
+chmod -R a+rx /root/.linuxbrew 2>/dev/null || true
+chmod -R a+rx /data/linuxbrew 2>/dev/null || true
+chmod 755 /root/.linuxbrew /data/linuxbrew 2>/dev/null || true
 
 # Create wrapper for brew command (runs as brewuser)
 cat > /usr/local/bin/brew << 'BREW_WRAPPER'
