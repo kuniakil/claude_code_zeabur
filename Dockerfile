@@ -27,6 +27,9 @@ RUN sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/
     sed -i 's/^#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     mkdir -p /run/sshd
 
+# Ensure /run/sshd exists for SSH daemon
+RUN touch /run/sshd/sshd.ready
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 

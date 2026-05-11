@@ -16,5 +16,21 @@ export CLAUDE_DATA_DIR=/data/.claude
 # Add Claude Code to PATH
 export PATH="/root/.local/bin:$PATH"
 
+# Configure MiniMax settings if environment variables are present
+if [ -n "$ANTHROPIC_AUTH_TOKEN" ]; then
+    mkdir -p /root/.claude
+    cat > /root/.claude/settings.json << 'SETTINGS_EOF'
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "'"$ANTHROPIC_AUTH_TOKEN"'",
+    "ANTHROPIC_BASE_URL": "https://api.minimax.io/anthropic",
+    "ANTHROPIC_MODEL": "MiniMax-M2.7",
+    "API_TIMEOUT_MS": "300000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
+SETTINGS_EOF
+fi
+
 # Start SSH daemon
 exec /usr/sbin/sshd -D -e
