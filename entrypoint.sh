@@ -13,5 +13,8 @@ fi
 mkdir -p /data/.claude
 export CLAUDE_DATA_DIR=/data/.claude
 
+# Add Claude Code to PATH
+export PATH="/root/.local/bin:$PATH"
+
 # Start SSH daemon
 exec /usr/sbin/sshd -D -e
