@@ -31,8 +31,7 @@ RUN mkdir -p /root/.linuxbrew && \
     rm /tmp/brew.tar.gz && \
     mkdir -p /root/.linuxbrew/bin /root/.linuxbrew/sbin /root/.linuxbrew/cache && \
     useradd -m -s /bin/bash brewuser && \
-    chown -R brewuser:brewuser /root/.linuxbrew && \
-    cd /root/.linuxbrew && git init && git config user.email "brew@localhost" && git config user.name "brew"
+    chown -R brewuser:brewuser /root/.linuxbrew
 
 ENV HOMEBREW_PREFIX=/root/.linuxbrew
 ENV HOMEBREW_CACHE=/data/linuxbrew/cache

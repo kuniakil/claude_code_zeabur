@@ -39,8 +39,14 @@ exec su - brewuser -c "export HOMEBREW_PREFIX=/root/.linuxbrew && export HOMEBRE
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
 
-# Ensure brewuser owns the linuxbrew directories
-chown -R brewuser:brewuser /root/.linuxbrew /data/linuxbrew 2>/dev/null || true
+# Copy linuxbrew to persistent location on first run
+if [ ! -f /data/linuxbrew/homebrew/bin/brew ]; then
+    cp -r /root/.linuxbrew /data/linuxbrew/homebrew/
+fi
+# Symlink back to /root/.linuxbrew for the wrapper to work
+rm -rf /root/.linuxbrew 2>/dev/null || true
+ln -s /data/linuxbrew/homebrew /root/.linuxbrew
+chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
 
 # Copy Bun from image to /data/.bun if not already there (first run)
 if [ -d /root/.bun ] && [ ! -L /data/.bun ] && [ ! -f /data/.bun/bun ]; then
