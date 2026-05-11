@@ -27,9 +27,10 @@ RUN mkdir -p /root/.linuxbrew && \
     tar -xzf /tmp/brew.tar.gz -C /root/.linuxbrew --strip-components=1 && \
     rm /tmp/brew.tar.gz && \
     mkdir -p /root/.linuxbrew/bin /root/.linuxbrew/sbin /root/.linuxbrew/cache && \
-    ln -s /root/.linuxbrew/bin/brew /usr/local/bin/brew && \
     useradd -m -s /bin/bash brewuser && \
-    chown -R brewuser:brewuser /root/.linuxbrew
+    chown -R brewuser:brewuser /root/.linuxbrew && \
+    chmod -R a+rx /root/.linuxbrew && \
+    chmod 755 /root/.linuxbrew/bin/brew
 
 ENV HOMEBREW_PREFIX=/root/.linuxbrew
 ENV HOMEBREW_CACHE=/data/linuxbrew/cache
