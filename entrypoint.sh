@@ -35,16 +35,12 @@ chmod 755 /root/.linuxbrew/bin/brew 2>/dev/null || true
 rm -f /usr/local/bin/brew 2>/dev/null || true
 cat > /usr/local/bin/brew << 'BREW_WRAPPER'
 #!/bin/bash
-cd /root
-export HOME=/home/brewuser
-export HOMEBREW_PREFIX=/root/.linuxbrew
-export HOMEBREW_CACHE=/data/linuxbrew/cache
-export HOMEBREW_CELLAR=/data/linuxbrew/Cellar
-export HOMEBREW_LOCAL=/data/linuxbrew/homebrew
-export PATH=/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/usr/local/bin:/usr/bin:/bin
-exec su - brewuser -c "cd /root && export HOME=/home/brewuser && export HOMEBREW_PREFIX=/root/.linuxbrew && export HOMEBREW_CACHE=/data/linuxbrew/cache && export HOMEBREW_CELLAR=/data/linuxbrew/Cellar && export HOMEBREW_LOCAL=/data/linuxbrew/homebrew && export PATH=/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/usr/local/bin:/usr/bin:/bin && /root/.linuxbrew/bin/brew $@"
+exec su - brewuser -c "export HOMEBREW_PREFIX=/root/.linuxbrew && export HOMEBREW_CACHE=/data/linuxbrew/cache && export HOMEBREW_CELLAR=/data/linuxbrew/Cellar && export HOMEBREW_LOCAL=/data/linuxbrew/homebrew && cd /root && /root/.linuxbrew/bin/brew $@"
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
+
+# Ensure brewuser owns the linuxbrew directories
+chown -R brewuser:brewuser /root/.linuxbrew /data/linuxbrew 2>/dev/null || true
 
 # Copy Bun from image to /data/.bun if not already there (first run)
 if [ -d /root/.bun ] && [ ! -L /data/.bun ] && [ ! -f /data/.bun/bun ]; then

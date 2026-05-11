@@ -32,8 +32,8 @@ RUN mkdir -p /root/.linuxbrew && \
     mkdir -p /root/.linuxbrew/bin /root/.linuxbrew/sbin /root/.linuxbrew/cache && \
     useradd -m -s /bin/bash brewuser && \
     chown -R brewuser:brewuser /root/.linuxbrew && \
-    chmod -R a+rx /root/.linuxbrew && \
-    chmod 755 /root/.linuxbrew/bin/brew
+    touch /root/.linuxbrew/.git/HEAD && \
+    git config --global --file /root/.linuxbrew/.gitconfig core.comment "" || true
 
 ENV HOMEBREW_PREFIX=/root/.linuxbrew
 ENV HOMEBREW_CACHE=/data/linuxbrew/cache
