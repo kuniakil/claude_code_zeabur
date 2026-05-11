@@ -21,13 +21,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Claude Code via official installer
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
-# Install Homebrew (Linuxbrew)
+# Install Homebrew (Linuxbrew) manually
+RUN mkdir -p /root/.linuxbrew && \
+    curl -fsSL https://github.com/Homebrew/brew/archive/refs/tags/4.4.0.tar.gz > /tmp/brew.tar.gz && \
+    tar -xzf /tmp/brew.tar.gz -C /root/.linuxbrew --strip-components=1 && \
+    rm /tmp/brew.tar.gz && \
+    mkdir -p /root/.linuxbrew/bin /root/.linuxbrew/sbin /root/.linuxbrew/cache && \
+    ln -s /root/.linuxbrew/bin/brew /usr/local/bin/brew
 ENV HOMEBREW_PREFIX=/root/.linuxbrew
 ENV HOMEBREW_CACHE=/root/.linuxbrew/cache
 ENV HOMEBREW_HOME=/root/.linuxbrew
 ENV PATH="/root/.linuxbrew/bin:/root/.linuxbrew/sbin:$PATH"
-RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-    echo 'eval "$(/root/.linuxbrew/bin/brew shellenv)"' >> /root/.bashrc_env
 
 # Install Bun to persistent volume
 ENV BUN_INSTALL=/data/bun
