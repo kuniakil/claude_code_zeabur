@@ -18,15 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nano \
     && rm -rf /var/lib/apt/lists/*
 
-# Add Claude Code apt repository + install
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    && curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
-       -o /etc/apt/keyrings/claude-code.asc \
-    && echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt stable main" \
-       > /etc/apt/sources.list.d/claude-code.list \
-    && apt-get update && apt-get install -y claude-code \
-    && rm -rf /var/lib/apt/lists/*
+# Install Claude Code via official installer
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # Harden SSH config - disable password auth, allow root login
 RUN sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config && \
