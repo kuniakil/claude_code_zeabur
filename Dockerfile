@@ -33,12 +33,12 @@ ENV HOMEBREW_CACHE=/root/.linuxbrew/cache
 ENV HOMEBREW_HOME=/root/.linuxbrew
 ENV PATH="/root/.linuxbrew/bin:/root/.linuxbrew/sbin:$PATH"
 
-# Install Bun to persistent volume
-ENV BUN_INSTALL=/data/bun
+# Install Bun to /root/.bun (persistent via /data/.bun symlink)
+ENV BUN_INSTALL=/root/.bun
 RUN curl -fsSL https://bun.sh/install | bash
 
 # Ensure npm global packages are in PATH
-ENV PATH="/data/bun/bin:/data/npm-global/bin:$PATH"
+ENV PATH="/root/.bun/bin:/data/npm-global/bin:$PATH"
 
 # Install Happy CLI to persistent volume
 RUN mkdir -p /data/npm-global && npm config set prefix /data/npm-global && npm install -g happy

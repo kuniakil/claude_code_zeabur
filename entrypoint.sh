@@ -12,8 +12,15 @@ fi
 # Persist Claude Code data to named volume
 mkdir -p /data/.claude
 mkdir -p /data/npm-global
-mkdir -p /data/bun
+mkdir -p /data/linuxbrew/Cellar
+mkdir -p /data/linuxbrew/homebrew
+mkdir -p /data/.bun
 export CLAUDE_DATA_DIR=/data/.claude
+
+# Copy Bun from image to /data/.bun if not already there (first run)
+if [ -d /root/.bun ] && [ ! -L /data/.bun ] && [ ! -f /data/.bun/bun ]; then
+    cp -r /root/.bun/* /data/.bun/ 2>/dev/null || true
+fi
 
 # Add Claude Code to PATH
 export PATH="/root/.local/bin:$PATH"
@@ -34,16 +41,19 @@ if [ -f /data/.env ]; then
     set +a
 fi
 
-# Set Homebrew environment
+# Set Homebrew environment - use /data for user-installed packages (persistent)
 export HOMEBREW_PREFIX="/root/.linuxbrew"
-export HOMEBREW_CACHE="/root/.linuxbrew/cache"
-export HOMEBREW_HOME="/root/.linuxbrew"
-export BUN_INSTALL="/data/bun"
-export PATH="/data/bun/bin:/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/data/npm-global/bin:/root/.local/bin:$PATH"
+export HOMEBREW_CACHE="/data/linuxbrew/cache"
+export HOMEBREW_HOME="/data/linuxbrew"
+export HOMEBREW_CELLAR="/data/linuxbrew/Cellar"
+export HOMEBREW_LOCAL="/data/linuxbrew/homebrew"
+export BUN_INSTALL="/data/.bun"
+export PATH="/data/.bun/bin:/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/data/npm-global/bin:/root/.local/bin:$PATH"
 [ -f /root/.linuxbrew/bin/brew ] && eval "$(/root/.linuxbrew/bin/brew shellenv)"
 
 # Set npm global packages path
 export npm_config_prefix="/data/npm-global"
+export PATH="/data/npm-global/bin:$PATH"
 
 # Set defaults
 export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.minimax.io/anthropic}"
