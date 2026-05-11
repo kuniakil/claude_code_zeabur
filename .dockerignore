@@ -1,5 +1,9 @@
 .git
 .gitignore
 .env
+.env.*
+!.env.example
 *.md
 !README.md
+.claude
+.mcp.json

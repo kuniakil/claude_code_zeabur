@@ -1,0 +1,61 @@
+# Environment files with credentials
+.env
+.env.local
+.env.*.local
+*.env
+
+# Credentials and secrets
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+*.p12
+*.pfx
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Claude Code
+.claude/
+.claude.json
+.mcp.json
+
+# IDE and editor
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+.vs/
+*.sublime-*
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+dist/
+build/
+*.deb
+*.rpm
+*.apk
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS specific
+Thumbs.db
+desktop.ini
