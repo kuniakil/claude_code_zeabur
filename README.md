@@ -4,13 +4,21 @@ A Docker image for deploying Claude Code CLI on Zeabur with SSH access.
 
 ## Features
 
-- **Debian Bookworm Slim** base (~80MB)
+- **Node.js 20 on Debian Bookworm** base
 - **OpenSSH Server** bundled (key auth only, root login enabled)
 - **Claude Code CLI** via official installer
+- **Happy CLI** for mobile/browser remote control (port 3005)
 - **Development tools**: git, build-essential, jq, vim, nano, bash
 - **Root user** for SSH sessions
 - **Named volume** at `/data` for persistent data
 - **MiniMax API** support (international endpoint)
+
+## Ports
+
+| Port | Service |
+|------|---------|
+| 22 | SSH |
+| 3005 | Happy CLI (mobile/web remote control) |
 
 ## Important: SSH Environment Variable Issue
 
@@ -37,6 +45,30 @@ ssh -i ~/.ssh/your_key.pem root@<zeabur-ip>
 ```
 
 The credentials will be automatically loaded from `/data/.env` on every SSH login.
+
+## Using Happy (Mobile Remote Control)
+
+### Step 1: Expose port 3005 in Zeabur
+
+In Zeabur dashboard, expose port 3005 for the Happy CLI.
+
+### Step 2: Start Happy session
+
+SSH into the container and run:
+
+```bash
+happy claude
+```
+
+This will display a QR code. Scan it with the Happy mobile app to connect.
+
+### Step 3: Alternative - Normal Claude Code
+
+If you don't want mobile control, just use Claude Code directly via SSH:
+
+```bash
+claude
+```
 
 ## Environment Variables
 
@@ -71,6 +103,7 @@ ssh -i ~/.ssh/id_rsa root@localhost -p 2222
 docker run -d \
   --name claude-code \
   -p 2222:22 \
+  -p 3005:3005 \
   -e SSH_AUTHORIZED_KEYS="ssh-rsa AAAA..." \
   -e ANTHROPIC_BASE_URL="https://api.minimax.io/anthropic" \
   -e ANTHROPIC_MODEL="MiniMax-M2.7" \

@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM node:20-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Claude Code via official installer
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
+# Install Happy CLI
+RUN npm install -g happy
+
 # Harden SSH config - disable password auth, allow root login
 RUN sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config && \
     sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
@@ -33,6 +36,6 @@ RUN touch /run/sshd/sshd.ready
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
-EXPOSE 22
+EXPOSE 22 3005
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/sshd", "-D", "-e"]
