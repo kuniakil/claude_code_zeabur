@@ -36,9 +36,7 @@ jobs:
         id: tag
         run: |
           DATE=$(date +%Y.%-m.%-d)
-          SHA=$(echo ${{ github.sha }} | cut -c1-7)
           echo "tag=$DATE" >> $GITHUB_OUTPUT
-          echo "sha=$SHA" >> $GITHUB_OUTPUT
 
       - name: Extract metadata
         id: meta
@@ -48,7 +46,6 @@ jobs:
           tags: |
             type=raw,value=latest
             type=raw,value=${{ steps.tag.outputs.tag }}
-            type=raw,value=${{ steps.tag.outputs.sha }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
