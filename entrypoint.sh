@@ -32,12 +32,12 @@ chmod 755 /root/.linuxbrew /data/linuxbrew 2>/dev/null || true
 chmod 755 /root/.linuxbrew/bin/brew 2>/dev/null || true
 
 # Create wrapper for brew command (runs as brewuser)
+rm -f /usr/local/bin/brew 2>/dev/null || true
 cat > /usr/local/bin/brew << 'BREW_WRAPPER'
 #!/bin/bash
 exec su - brewuser -c "HOMEBREW_PREFIX=/root/.linuxbrew HOMEBREW_CACHE=/data/linuxbrew/cache HOMEBREW_CELLAR=/data/linuxbrew/Cellar HOMEBREW_LOCAL=/data/linuxbrew/homebrew /root/.linuxbrew/bin/brew $@"
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
-chmod -R a+rx /root/.linuxbrew/bin/brew 2>/dev/null || true
 
 # Copy Bun from image to /data/.bun if not already there (first run)
 if [ -d /root/.bun ] && [ ! -L /data/.bun ] && [ ! -f /data/.bun/bun ]; then
