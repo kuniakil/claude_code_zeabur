@@ -21,8 +21,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Claude Code via official installer
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
-# Install Happy CLI
-RUN npm install -g happy
+# Install Homebrew (Linuxbrew) to persistent volume
+ENV HOMEBREW_PREFIX=/root/.linuxbrew
+ENV HOMEBREW_CACHE=/root/.linuxbrew/cache
+ENV HOMEBREW_HOME=/root/.linuxbrew
+ENV PATH="/root/.linuxbrew/bin:/root/.linuxbrew/sbin:$PATH"
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
+    echo 'eval "$(/root/.linuxbrew/bin/brew shellenv)"' >> /root/.bashrc_env
+
+# Install Bun to persistent volume
+ENV BUN_INSTALL=/data/bun
+RUN curl -fsSL https://bun.sh/install | bash
+
+# Ensure npm global packages are in PATH
+ENV PATH="/data/bun/bin:/data/npm-global/bin:$PATH"
+
+# Install Happy CLI to persistent volume
+RUN mkdir -p /data/npm-global && npm config set prefix /data/npm-global && npm install -g happy
 
 # Harden SSH config - disable password auth, allow root login
 RUN sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config && \

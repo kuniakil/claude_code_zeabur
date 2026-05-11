@@ -11,6 +11,8 @@ fi
 
 # Persist Claude Code data to named volume
 mkdir -p /data/.claude
+mkdir -p /data/npm-global
+mkdir -p /data/bun
 export CLAUDE_DATA_DIR=/data/.claude
 
 # Add Claude Code to PATH
@@ -32,12 +34,22 @@ if [ -f /data/.env ]; then
     set +a
 fi
 
+# Set Homebrew environment
+export HOMEBREW_PREFIX="/root/.linuxbrew"
+export HOMEBREW_CACHE="/root/.linuxbrew/cache"
+export HOMEBREW_HOME="/root/.linuxbrew"
+export BUN_INSTALL="/data/bun"
+export PATH="/data/bun/bin:/root/.linuxbrew/bin:/root/.linuxbrew/sbin:/data/npm-global/bin:/root/.local/bin:$PATH"
+[ -f /root/.linuxbrew/bin/brew ] && eval "$(/root/.linuxbrew/bin/brew shellenv)"
+
+# Set npm global packages path
+export npm_config_prefix="/data/npm-global"
+
 # Set defaults
 export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.minimax.io/anthropic}"
 export ANTHROPIC_MODEL="${ANTHROPIC_MODEL:-MiniMax-M2.7}"
 export API_TIMEOUT_MS="${API_TIMEOUT_MS:-300000}"
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="${CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:-1}"
-export PATH="/root/.local/bin:$PATH"
 BASHRC_EOF
 
 # Prepend to .bashrc

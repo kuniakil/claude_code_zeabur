@@ -13,7 +13,7 @@ A Docker image for deploying Claude Code CLI on Zeabur with SSH access.
 - **Development tools**: git, build-essential, jq, vim, nano, bash
 - **Root user** for SSH sessions
 - **Named volume** at `/data` for persistent data
-- **Homebrew** pre-installed to `/data/linuxbrew` for persistent package management
+- **Homebrew** pre-installed to `/root/.linuxbrew` for persistent package management
 - **npm global packages** pre-installed to `/data/npm-global` for persistent npm packages
 - **Bun** pre-installed to `/data/bun` for persistent Bun runtime
 - **MiniMax API** support (international endpoint)
