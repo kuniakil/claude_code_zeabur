@@ -23,8 +23,8 @@ mkdir -p /data/linuxbrew/cache
 mkdir -p /data/.bun
 export CLAUDE_DATA_DIR=/data/.claude
 
-# Copy linuxbrew to persistent location on first run (only copy if not already done)
-if [ ! -f /data/linuxbrew/homebrew/bin/brew ] && [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
+# Copy linuxbrew to persistent location on EVERY startup (fresh from image, overwrite to keep fresh)
+if [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
     cp -r /home/brewuser/.linuxbrew /data/linuxbrew/homebrew/
 fi
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
