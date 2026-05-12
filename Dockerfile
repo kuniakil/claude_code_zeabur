@@ -40,12 +40,11 @@ ENV HOMEBREW_CELLAR=/data/linuxbrew/Cellar
 ENV HOMEBREW_LOCAL=/data/linuxbrew/homebrew
 ENV PATH="/home/brewuser/.linuxbrew/bin:/home/brewuser/.linuxbrew/sbin:$PATH"
 
-# Install Bun to /root/.bun (persistent via /data/.bun symlink)
-ENV BUN_INSTALL=/root/.bun
-RUN curl -fsSL https://bun.sh/install | bash
+# Bun will be installed manually by user to /data/.bun
+ENV BUN_INSTALL=/data/.bun
 
 # Ensure npm global packages are in PATH
-ENV PATH="/root/.bun/bin:/data/npm-global/bin:$PATH"
+ENV PATH="/data/.bun/bin:/data/npm-global/bin:$PATH"
 
 # Harden SSH config - disable password auth, allow root login
 RUN sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config && \

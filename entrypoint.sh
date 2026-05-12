@@ -24,32 +24,19 @@ mkdir -p /data/.bun
 export CLAUDE_DATA_DIR=/data/.claude
 
 # Copy linuxbrew to persistent location on EVERY startup (fresh from image, overwrite to keep fresh)
-echo "[DEBUG] Checking /home/brewuser/.linuxbrew/bin/brew: $(ls -la /home/brewuser/.linuxbrew/bin/brew 2>&1)"
-echo "[DEBUG] Checking /data/linuxbrew/homebrew/bin/brew: $(ls -la /data/linuxbrew/homebrew/bin/brew 2>&1)"
 if [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
-    echo "[DEBUG] Copying Homebrew from image to /data/linuxbrew/homebrew/"
     cp -rT /home/brewuser/.linuxbrew /data/linuxbrew/homebrew/
-    echo "[DEBUG] Copy done. /data/linuxbrew/homebrew/bin/brew: $(ls -la /data/linuxbrew/homebrew/bin/brew 2>&1)"
 fi
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
 git config --global --add safe.directory /data/linuxbrew/homebrew
 
 # Create wrapper for brew command (runs as brewuser)
-echo "[DEBUG] Creating brew wrapper at /usr/local/bin/brew"
 rm -f /usr/local/bin/brew 2>/dev/null || true
 cat > /usr/local/bin/brew << 'BREW_WRAPPER'
 #!/bin/bash
 exec su - brewuser -c "export HOMEBREW_PREFIX=/data/linuxbrew/homebrew && export HOMEBREW_CACHE=/data/linuxbrew/cache && export HOMEBREW_CELLAR=/data/linuxbrew/Cellar && export HOMEBREW_LOCAL=/data/linuxbrew/homebrew && cd /data/linuxbrew/homebrew && /data/linuxbrew/homebrew/bin/brew $@"
 BREW_WRAPPER
 chmod 755 /usr/local/bin/brew
-echo "[DEBUG] Wrapper created. Contents:"
-cat /usr/local/bin/brew
-echo "[DEBUG] Wrapper is executable: $(ls -la /usr/local/bin/brew)"
-
-# Copy Bun from image to /data/.bun if not already there (first run)
-if [ -d /root/.bun ] && [ ! -f /data/.bun/bun ]; then
-    cp -r /root/.bun/* /data/.bun/ 2>/dev/null || true
-fi
 
 # Add Claude Code to PATH
 export PATH="/root/.local/bin:$PATH"
