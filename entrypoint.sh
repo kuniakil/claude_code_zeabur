@@ -23,12 +23,13 @@ mkdir -p /data/linuxbrew/cache
 mkdir -p /data/.bun
 export CLAUDE_DATA_DIR=/data/.claude
 
-# Copy linuxbrew to persistent location on EVERY startup (fresh from image, overwrite to keep fresh)
-if [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
-    cp -rT /home/brewuser/.linuxbrew /data/linuxbrew/homebrew/
-fi
+# Ensure brewuser owns /data/linuxbrew (in case it was created by user manually)
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
-git config --global --add safe.directory /data/linuxbrew/homebrew
+
+# Add safe.directory for Homebrew git repo (if it exists)
+if [ -d /data/linuxbrew/homebrew/.git ]; then
+    git config --global --add safe.directory /data/linuxbrew/homebrew 2>/dev/null || true
+fi
 
 # Create wrapper for brew command (runs as brewuser)
 rm -f /usr/local/bin/brew 2>/dev/null || true
