@@ -21,6 +21,7 @@ mkdir -p /data/linuxbrew/Cellar
 mkdir -p /data/linuxbrew/homebrew
 mkdir -p /data/linuxbrew/cache
 mkdir -p /data/.bun
+mkdir -p /data/.config
 export CLAUDE_DATA_DIR=/data/.claude
 
 # Ensure brewuser owns /data/linuxbrew (in case it was created by user manually)
@@ -71,6 +72,10 @@ export PATH="/usr/local/bin:/data/.bun/bin:/data/linuxbrew/homebrew/bin:/data/li
 # Set npm global packages path
 export npm_config_prefix="/data/npm-global"
 export PATH="/data/npm-global/bin:$PATH"
+
+# Set XDG_CONFIG_HOME for persistent config directory (LazyVim, etc.)
+export XDG_CONFIG_HOME="/data/.config"
+export PATH="/data/.config/nvim/bin:$PATH"
 
 # Set defaults
 export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.minimax.io/anthropic}"
