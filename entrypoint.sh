@@ -32,6 +32,7 @@ if [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
     echo "[DEBUG] Copy done. /data/linuxbrew/homebrew/bin/brew: $(ls -la /data/linuxbrew/homebrew/bin/brew 2>&1)"
 fi
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
+git config --global --add safe.directory /data/linuxbrew/homebrew
 
 # Create wrapper for brew command (runs as brewuser)
 echo "[DEBUG] Creating brew wrapper at /usr/local/bin/brew"
