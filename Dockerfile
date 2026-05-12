@@ -24,15 +24,14 @@ RUN curl -fsSL https://claude.ai/install.sh | bash
 # Create Docker marker file so Homebrew knows it's in a container
 RUN touch /.dockerenv
 
-# Install Homebrew (Linuxbrew) to brewuser home directory
+# Install Homebrew (Linuxbrew) to brewuser home directory via git clone
 RUN useradd -m -s /bin/bash brewuser && \
     mkdir -p /home/brewuser/.linuxbrew && \
-    curl -fsSL https://github.com/Homebrew/brew/archive/refs/tags/4.4.0.tar.gz > /tmp/brew.tar.gz && \
-    tar -xzf /tmp/brew.tar.gz -C /home/brewuser/.linuxbrew --strip-components=1 && \
-    rm /tmp/brew.tar.gz && \
+    git clone https://github.com/Homebrew/brew /home/brewuser/.linuxbrew && \
     mkdir -p /home/brewuser/.linuxbrew/bin /home/brewuser/.linuxbrew/sbin /home/brewuser/.linuxbrew/cache && \
     chown -R brewuser:brewuser /home/brewuser/.linuxbrew && \
-    touch /.dockerenv
+    touch /.dockerenv && \
+    git config --global --add safe.directory /home/brewuser/.linuxbrew
 
 ENV HOMEBREW_PREFIX=/home/brewuser/.linuxbrew
 ENV HOMEBREW_CACHE=/data/linuxbrew/cache
