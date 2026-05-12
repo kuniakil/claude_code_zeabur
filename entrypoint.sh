@@ -28,7 +28,7 @@ echo "[DEBUG] Checking /home/brewuser/.linuxbrew/bin/brew: $(ls -la /home/brewus
 echo "[DEBUG] Checking /data/linuxbrew/homebrew/bin/brew: $(ls -la /data/linuxbrew/homebrew/bin/brew 2>&1)"
 if [ -f /home/brewuser/.linuxbrew/bin/brew ]; then
     echo "[DEBUG] Copying Homebrew from image to /data/linuxbrew/homebrew/"
-    cp -r /home/brewuser/.linuxbrew /data/linuxbrew/homebrew/
+    cp -rT /home/brewuser/.linuxbrew /data/linuxbrew/homebrew/
     echo "[DEBUG] Copy done. /data/linuxbrew/homebrew/bin/brew: $(ls -la /data/linuxbrew/homebrew/bin/brew 2>&1)"
 fi
 chown -R brewuser:brewuser /data/linuxbrew 2>/dev/null || true
