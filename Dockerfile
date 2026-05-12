@@ -47,9 +47,6 @@ RUN curl -fsSL https://bun.sh/install | bash
 # Ensure npm global packages are in PATH
 ENV PATH="/root/.bun/bin:/data/npm-global/bin:$PATH"
 
-# Install Happy CLI to persistent volume
-RUN mkdir -p /data/npm-global && npm config set prefix /data/npm-global && npm install -g happy
-
 # Harden SSH config - disable password auth, allow root login
 RUN sed -i 's/^#*PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config && \
     sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
